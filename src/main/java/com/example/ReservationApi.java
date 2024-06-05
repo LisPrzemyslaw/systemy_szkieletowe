@@ -1,5 +1,6 @@
 package com.example;
 
+import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -16,8 +17,6 @@ public class ReservationApi {
     @Inject
     Template reservation;
 
-    @Inject
-    Engine engine;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
