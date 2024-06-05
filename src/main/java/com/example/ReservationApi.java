@@ -8,19 +8,26 @@ import jakarta.ws.rs.core.MediaType;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.Engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Path("/reservation")
 public class ReservationApi {
     @Inject
-    Engine engine;
+    Template reservation;
 
     @Inject
-    Template resevation = engine.parse("reservation.html");
-
-
+    Engine engine;
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_HTML)
     public String index() {
-        return "";
+        List<String> restaurants = new ArrayList<>();
+        restaurants.add("KFC");
+        restaurants.add("MCDonald");
+
+
+        return this.reservation.data("restaurants", restaurants)
+                .data("tableNumber", 4).render();
     }
 }

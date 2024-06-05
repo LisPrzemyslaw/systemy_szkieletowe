@@ -40,13 +40,14 @@
     function loadRestaurant() {
         const restaurantSelect = document.getElementById('restaurant');
         restaurantSelect.innerHTML = ''; // clear current option
-        var restaurants = {restaurants};
+        let restaurants = {restaurants};
         restaurants.forEach(restaurant => {
             const option = document.createElement('option');
             option.value = restaurant;
             option.textContent = restaurant;
             restaurantSelect.appendChild(option);
         });
+
 
     }
     function loadTables() {
@@ -71,6 +72,7 @@
 
     document.getElementById('restaurant').addEventListener('change', loadTables);
     document.getElementById('date').addEventListener('change', loadTables);
+
     // Load on first load
     window.onload = loadRestaurant;
     window.onload = loadTables;
