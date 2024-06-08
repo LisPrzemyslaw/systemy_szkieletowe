@@ -2,6 +2,7 @@ package com.example;
 
 import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -17,10 +18,13 @@ public class ReservationApi {
     @Inject
     Template reservation;
 
+    @Inject
+    EntityManager entityManager;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() {
+
         List<String> restaurants = new ArrayList<>();
         restaurants.add("KFC");
         restaurants.add("MCDonald");
