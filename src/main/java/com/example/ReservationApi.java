@@ -3,7 +3,9 @@ package com.example;
 import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -19,7 +21,7 @@ public class ReservationApi {
     Template reservation;
 
     @Inject
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -32,5 +34,11 @@ public class ReservationApi {
 
         return this.reservation.data("restaurants", restaurants)
                 .data("tableNumber", 4).render();
+    }
+
+    @POST
+    @Transactional
+    public void createReservation(Reservation reservation) {
+        entityManager.persist(reservation);
     }
 }
