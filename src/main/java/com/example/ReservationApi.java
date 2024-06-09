@@ -3,11 +3,9 @@ package com.example;
 import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.Engine;
@@ -21,19 +19,26 @@ public class ReservationApi {
     Template reservation;
 
     @Inject
-    private EntityManager entityManager;
+    EntityManager entityManager;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() {
+        TypedQuery<Restaurant> queryGetAllRestaurant = entityManager.createQuery("SELECT r FROM Restaurant r", Restaurant.class);
+        List<Restaurant> restaurants = queryGetAllRestaurant.getResultList();
 
-        List<String> restaurants = new ArrayList<>();
-        restaurants.add("KFC");
-        restaurants.add("MCDonald");
+        return this.reservation.data("restaurants", restaurants).render();
+    }
 
-
-        return this.reservation.data("restaurants", restaurants)
-                .data("tableNumber", 4).render();
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Restaurant getRestaurantById(@PathParam("id") Long id) {
+        Restaurant restaurant = entityManager.find(Restaurant.class, id);
+        if (restaurant == null) {
+            throw new NotFoundException("Restaurant not found with id " + id);
+        }
+        return restaurant;
     }
 
     @POST

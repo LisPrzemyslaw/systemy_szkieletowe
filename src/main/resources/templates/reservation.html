@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
     <title>Table reservation</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .container { margin: 20px; }
-        .form-item { margin-bottom: 10px; }
-        button { padding: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .form-item {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -16,11 +27,13 @@
     <div class="form-item">
         <label for="restaurant">Choose restaurant:</label>
         <select id="restaurant">
-            <!-- dynamically generated in JavaScript -->
+            {#for restaurant in restaurants}
+                <option value="{restaurant.id}">{restaurant.name}</option>
+            {/for}
         </select>
     </div>
     <div class="form-item">
-        <label for="date">Data:</label>
+        <label for="date">Date:</label>
         <input type="date" id="date">
     </div>
     <div class="form-item">
@@ -37,27 +50,27 @@
 </div>
 
 <script>
-    function loadRestaurant() {
-        const restaurantSelect = document.getElementById('restaurant');
-        restaurantSelect.innerHTML = ''; // clear current option
-        let restaurants = {restaurants};
-        restaurants.forEach(restaurant => {
-            const option = document.createElement('option');
-            option.value = restaurant;
-            option.textContent = restaurant;
-            restaurantSelect.appendChild(option);
-        });
-    }
     function loadTables() {
         const tableSelect = document.getElementById('tableNumber');
         tableSelect.innerHTML = ''; // clear current option
-        let tableNumber = {tableNumber};
-        for (let i = 1; i <= tableNumber; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = 'Table ' + i;
-            tableSelect.appendChild(option);
-        }
+        const restaurantSelect = document.getElementById('restaurant');
+        const restaurantId = restaurantSelect.value;
+        const url = "http://localhost:8080/reservation/" + restaurantId;
+        fetch(url)
+            .then(response => response.json())
+            .then(restaurant => {
+                for (let i = 1; i <= restaurant.number_of_tables; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = 'Table ' + i;
+                    tableSelect.appendChild(option);
+                }
+            })
+            .catch(error => console.error('Błąd podczas pobierania danych o restauracjach:', error));
+
+
+        // Assuming each restaurant has 10 tables for example purposes
+
     }
 
     function reserveTable() {
@@ -65,14 +78,13 @@
         const date = document.getElementById('date').value;
         const time = document.getElementById('time').value;
         const table = document.getElementById('tableNumber').value;
-        alert('Reserved table ' + table + ' in ' + restaurant + ' on ' + date + ' at ' + time);
+        alert('Reserved table ' + table + ' in restaurant ID ' + restaurant + ' on ' + date + ' at ' + time);
     }
 
     document.getElementById('restaurant').addEventListener('change', loadTables);
     document.getElementById('date').addEventListener('change', loadTables);
 
-    // Load on first load
-    window.onload = loadRestaurant;
+    // Load tables on first load
     window.onload = loadTables;
 </script>
 </body>
