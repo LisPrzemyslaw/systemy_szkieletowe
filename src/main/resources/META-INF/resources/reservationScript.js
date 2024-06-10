@@ -28,17 +28,6 @@ function reserveTable() {
     const table = document.getElementById('tableNumber').value;
     alert('Reserved table ' + table + ' in restaurant ID ' + restaurant + ' on ' + date + ' at ' + time);
 }
-function goToNextPage() {
-    const username = document.getElementById('username').value;
-    if (username) {
-        // Przykład przekierowania na inną stronę z przesłaniem nazwy użytkownika jako parametru
-        // window.location.href = `nextpage.html?username=${encodeURIComponent(username)}`;
-        alert("Good username: " + username);
-    } else {
-        alert('Please enter your username.');
-    }
-}
-
 
 /////////////////
 //    MAIN
