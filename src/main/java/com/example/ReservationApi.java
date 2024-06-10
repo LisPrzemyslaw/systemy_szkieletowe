@@ -33,11 +33,13 @@ public class ReservationApi {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Restaurant getRestaurantById(@PathParam("id") Long id) {
+    public Restaurant getRestaurantById(@PathParam("id") Long id,
+                                        @QueryParam("date") String date,
+                                        @QueryParam("time") String time) {
         Restaurant restaurant = entityManager.find(Restaurant.class, id);
-        if (restaurant == null) {
-            throw new NotFoundException("Restaurant not found with id " + id);
-        }
+        if (restaurant == null) throw new NotFoundException("Restaurant not found with id " + id);
+
+
         return restaurant;
     }
 
