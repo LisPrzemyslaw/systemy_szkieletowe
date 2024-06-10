@@ -20,6 +20,7 @@
             padding: 10px;
         }
     </style>
+    <script src="scripts.js" defer></script>
 </head>
 <body>
 <div class="container">
@@ -49,43 +50,6 @@
     <button onclick="reserveTable()">Reserve table</button>
 </div>
 
-<script>
-    function loadTables() {
-        const tableSelect = document.getElementById('tableNumber');
-        tableSelect.innerHTML = ''; // clear current option
-        const restaurantSelect = document.getElementById('restaurant');
-        const restaurantId = restaurantSelect.value;
-        const url = "http://localhost:8080/reservation/" + restaurantId;
-        fetch(url)
-            .then(response => response.json())
-            .then(restaurant => {
-                for (let i = 1; i <= restaurant.number_of_tables; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = 'Table ' + i;
-                    tableSelect.appendChild(option);
-                }
-            })
-            .catch(error => console.error('Błąd podczas pobierania danych o restauracjach:', error));
 
-
-        // Assuming each restaurant has 10 tables for example purposes
-
-    }
-
-    function reserveTable() {
-        const restaurant = document.getElementById('restaurant').value;
-        const date = document.getElementById('date').value;
-        const time = document.getElementById('time').value;
-        const table = document.getElementById('tableNumber').value;
-        alert('Reserved table ' + table + ' in restaurant ID ' + restaurant + ' on ' + date + ' at ' + time);
-    }
-
-    document.getElementById('restaurant').addEventListener('change', loadTables);
-    document.getElementById('date').addEventListener('change', loadTables);
-
-    // Load tables on first load
-    window.onload = loadTables;
-</script>
 </body>
 </html>
