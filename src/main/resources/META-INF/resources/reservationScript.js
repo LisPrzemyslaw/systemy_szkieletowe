@@ -26,8 +26,16 @@ function reserveTable() {
     const date = document.getElementById('date').value;
     const time = document.getElementById('time').value;
     const table = document.getElementById('tableNumber').value;
+    const username = getCookie('username');
+
     alert('Reserved table ' + table + ' in restaurant ID ' + restaurant + ' on ' + date + ' at ' + time);
 }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 
 /////////////////
 //    MAIN
