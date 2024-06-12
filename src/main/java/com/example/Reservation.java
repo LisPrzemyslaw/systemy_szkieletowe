@@ -15,10 +15,10 @@ public class Reservation {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "table_id", nullable = false)
-    private Table table;
+    private RestaurantTable restaurantTable;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private RestaurantUser restaurantUser;
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
@@ -36,20 +36,20 @@ public class Reservation {
         this.id = id;
     }
 
-    public Table getTable() {
-        return table;
+    public RestaurantTable getRestaurantTable() {
+        return restaurantTable;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public void setRestaurantTable(RestaurantTable restaurantTable) {
+        this.restaurantTable = restaurantTable;
     }
 
-    public User getUser() {
-        return user;
+    public RestaurantUser getRestaurantUser() {
+        return restaurantUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setRestaurantUser(RestaurantUser restaurantUser) {
+        this.restaurantUser = restaurantUser;
     }
 
     public LocalDate getDate() {

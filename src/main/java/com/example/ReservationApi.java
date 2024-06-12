@@ -39,7 +39,7 @@ public class ReservationApi {
         if (restaurant == null) throw new NotFoundException("Restaurant not found with id " + restaurantId);
         TypedQuery<Reservation> query = entityManager.createQuery(
                 "SELECT r FROM Reservation r " +
-                        "JOIN r.table t " +
+                        "JOIN r.restaurantTable t " +
                         "WHERE t.restaurant.id = :restaurantId " +
                         "AND r.date = :date " +
                         "AND r.time = :time", Reservation.class);
@@ -48,8 +48,7 @@ public class ReservationApi {
         query.setParameter("time", LocalTime.parse(time));
         List<Reservation> reservation = query.getResultList();
 
-//        return new AvailableTablesResponse(restaurant.getNumber_of_tables() - reservation.size());
-        return new AvailableTablesResponse(5);
+        return new AvailableTablesResponse(restaurant.getNumber_of_tables() - reservation.size());
     }
 
 

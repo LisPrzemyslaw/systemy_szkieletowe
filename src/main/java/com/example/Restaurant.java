@@ -16,14 +16,14 @@ public class Restaurant {
 
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Table> tables;
+    private List<RestaurantTable> restaurantTables;
 
-    public List<Table> getTables() {
-        return tables;
+    public List<RestaurantTable> getTables() {
+        return restaurantTables;
     }
 
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
+    public void setTables(List<RestaurantTable> restaurantTables) {
+        this.restaurantTables = restaurantTables;
     }
 
     public int getNumber_of_tables() {

@@ -4,25 +4,25 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
-public class User {
+@Entity(name = "restaurant_user")
+public class RestaurantUser {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-//    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
-//    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-//    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurantUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
-    public User() {
+    public RestaurantUser() {
     }
 
-    public User(Long id, String username, String firstName, String lastName) {
+    public RestaurantUser(Long id, String username, String firstName, String lastName) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
