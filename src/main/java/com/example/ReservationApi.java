@@ -1,6 +1,5 @@
 package com.example;
 
-import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -8,9 +7,9 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import io.quarkus.qute.Template;
-import io.quarkus.qute.Engine;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Path("/reservation")
@@ -31,17 +30,28 @@ public class ReservationApi {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{restaurantId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Restaurant getRestaurantById(@PathParam("id") Long id,
-                                        @QueryParam("date") String date,
-                                        @QueryParam("time") String time) {
-        Restaurant restaurant = entityManager.find(Restaurant.class, id);
-        if (restaurant == null) throw new NotFoundException("Restaurant not found with id " + id);
+    public AvailableTablesResponse getAvailableTables(@PathParam("restaurantId") Long restaurantId,
+                                 @QueryParam("date") String date,
+                                 @QueryParam("time") String time) {
+        Restaurant restaurant = entityManager.find(Restaurant.class, restaurantId);
+        if (restaurant == null) throw new NotFoundException("Restaurant not found with id " + restaurantId);
+        TypedQuery<Reservation> query = entityManager.createQuery(
+                "SELECT r FROM Reservation r " +
+                        "JOIN r.table t " +
+                        "WHERE t.restaurant.id = :restaurantId " +
+                        "AND r.date = :date " +
+                        "AND r.time = :time", Reservation.class);
+        query.setParameter("restaurantId", restaurantId);
+        query.setParameter("date", LocalDate.parse(date));
+        query.setParameter("time", LocalTime.parse(time));
+        List<Reservation> reservation = query.getResultList();
 
-
-        return restaurant;
+//        return new AvailableTablesResponse(restaurant.getNumber_of_tables() - reservation.size());
+        return new AvailableTablesResponse(5);
     }
+
 
     @POST
     @Transactional

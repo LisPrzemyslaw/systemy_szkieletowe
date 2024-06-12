@@ -1,50 +1,59 @@
 package com.example;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Table {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
+//    @Column(name = "chairs", nullable = false)
     private int chairs;
-    private Long restaurantId;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations;
 
     public Table() {
     }
 
-    public Table(Long id, int chairs, Long restaurantId) {
-        this.id = id;
-        this.chairs = chairs;
-        this.restaurantId = restaurantId;
+    public Long getId() {
+        return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public int getChairs() {
         return chairs;
-    }
-
-
-    public Long getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(Long restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     public void setChairs(int chairs) {
         this.chairs = chairs;
     }
 
-
-    public void setId(Long id) {
-        this.id = id;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public Long getId() {
-        return id;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

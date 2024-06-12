@@ -9,8 +9,9 @@ function loadTables() {
         const url = `/reservation/${restaurantId}?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`;
         fetch(url)
             .then(response => response.json())
-            .then(restaurant => {
-                for (let i = 1; i <= restaurant.number_of_tables; i++) {
+            .then(AvailableTablesResponse => {
+                // console.log("NOT: " + number_of_tables);
+                for (let i = 1; i <= AvailableTablesResponse.availableTables; i++) {
                     const option = document.createElement('option');
                     option.value = i;
                     option.textContent = 'Table ' + i;
