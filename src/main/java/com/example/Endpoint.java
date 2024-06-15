@@ -2,54 +2,44 @@ package com.example;
 
 import io.quarkus.qute.Template;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-/*
--- CREATE TABLE reservation (
---                              id SERIAL PRIMARY KEY,
---                              table_id BIGINT NOT NULL,
---                              user_id BIGINT NOT NULL,
---                              date DATE NOT NULL,
---                              time TIME NOT NULL
--- );
--- CREATE TABLE restaurant (
---                             id SERIAL PRIMARY KEY
--- );
--- CREATE TABLE "user" (
---                        id SERIAL PRIMARY KEY,
---                        username VARCHAR(255) NOT NULL UNIQUE,
---                        first_name VARCHAR(255) NOT NULL,
---                        last_name VARCHAR(255) NOT NULL
--- );
--- CREATE TABLE "table" (
---                        id SERIAL PRIMARY KEY,
---                        chairs INT NOT NULL,
---                        is_reserved BOOLEAN NOT NULL,
---                        restaurant_id BIGINT NOT NULL,
---                        user_id BIGINT,
---                        reservation_id BIGINT,
---                        CONSTRAINT fk_restaurant
---                            FOREIGN KEY (restaurant_id)
---                                REFERENCES restaurant(id),
---                        CONSTRAINT fk_user
---                            FOREIGN KEY (user_id)
---                                REFERENCES "user"(id),
---                        CONSTRAINT fk_reservation
---                            FOREIGN KEY (reservation_id)
---                                REFERENCES reservation(id)
--- );
+import jakarta.persistence.TypedQuery;
 
- */
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.persistence.NoResultException;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 @Path("/")
 public class Endpoint {
     @Inject
     Template endpoint;
 
+    @Inject
+    EntityManager entityManager;
+
     @GET
     @Produces(MediaType.TEXT_HTML)
+
     public String index() {
         return this.endpoint.render();
+    }
+
+    @POST
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response AddUserToDatabase(RestaurantUser user) {
+        TypedQuery<RestaurantUser> query = entityManager.createQuery(
+                "SELECT u FROM restaurant_user u WHERE u.username = :username", RestaurantUser.class);
+        query.setParameter("username", user.getUsername());
+        try {
+            query.getSingleResult();
+            return Response.status(Response.Status.OK).entity(user).build();
+        } catch (NoResultException e) {
+            entityManager.persist(user);
+            return Response.status(Response.Status.CREATED).entity(user).build();
+        }
     }
 }

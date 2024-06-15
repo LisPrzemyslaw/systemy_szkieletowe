@@ -11,10 +11,7 @@ public class RestaurantUser {
     private Long id;
     @Column(name = "username", nullable = false, unique = true)
     private String username;
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+
 
     @OneToMany(mappedBy = "restaurantUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
@@ -22,11 +19,9 @@ public class RestaurantUser {
     public RestaurantUser() {
     }
 
-    public RestaurantUser(Long id, String username, String firstName, String lastName) {
+    public RestaurantUser(Long id, String username) {
         this.id = id;
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -35,22 +30,6 @@ public class RestaurantUser {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public List<Reservation> getReservations() {

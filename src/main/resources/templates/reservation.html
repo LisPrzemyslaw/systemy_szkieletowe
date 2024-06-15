@@ -26,6 +26,11 @@
 <div class="container">
     <h1>Table reservation in restaurant</h1>
     <div class="form-item">
+        <label for="currentUsername">Current Username:</label>
+        <span id="currentUsername">Guest</span>
+        <button onclick="changeUser()">Change User</button>
+    </div>
+    <div class="form-item">
         <label for="restaurant">Choose restaurant:</label>
         <select id="restaurant">
             {#for restaurant in restaurants}

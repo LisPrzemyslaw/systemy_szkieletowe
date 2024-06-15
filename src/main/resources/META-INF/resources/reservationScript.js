@@ -22,14 +22,43 @@ function loadTables() {
     }
 }
 
-function reserveTable() {
-    const restaurant = document.getElementById('restaurant').value;
+async function reserveTable() {
     const date = document.getElementById('date').value;
     const time = document.getElementById('time').value;
-    const table = document.getElementById('tableNumber').value;
     const username = getCookie('username');
+    const restaurantId = document.getElementById('restaurant').value;
+    const tableId = document.getElementById('tableNumber').value;
 
-    alert('Reserved table ' + table + ' in restaurant ID ' + restaurant + ' on ' + date + ' at ' + time);
+    const reservationData = {
+        restaurantTable: { id: tableId },
+        restaurantUser: { username: username },
+        date: date,
+        time: time
+    };
+    console.log('Reservation data:', reservationData);
+
+    try {
+        const response = await fetch('/reservation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reservationData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const responseData = await response.json();
+        console.log('Reservation created:', responseData);
+        alert('Reserved table ' + tableId + ' in restaurant ID ' + restaurantId + ' on ' + date + ' at ' + time + ' for user ' + username + '.');
+
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Error creating reservation: ' + error.message);
+    }
+
 }
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -37,6 +66,9 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function changeUser(){
+    window.location.href = 'http://localhost:8080/';
+}
 
 /////////////////
 //    MAIN
@@ -44,7 +76,9 @@ function getCookie(name) {
 document.getElementById('restaurant').addEventListener('change', loadTables);
 document.getElementById('date').addEventListener('change', loadTables);
 document.getElementById('time').addEventListener('change', loadTables);
-
-
-// Load tables on first load
-// window.onload = loadTables;
+if (!getCookie('username')){
+    window.location.href = 'http://localhost:8080/';
+}
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('currentUsername').textContent = getCookie('username');
+});

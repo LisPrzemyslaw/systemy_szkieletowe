@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import io.quarkus.qute.Template;
+import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -54,7 +55,8 @@ public class ReservationApi {
 
     @POST
     @Transactional
-    public void createReservation(Reservation reservation) {
+    public Response createReservation(Reservation reservation) {
         entityManager.persist(reservation);
+        return Response.status(Response.Status.CREATED).entity(reservation).build();
     }
 }
