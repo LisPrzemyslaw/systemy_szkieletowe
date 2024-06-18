@@ -55,7 +55,16 @@ public class ReservationApi {
 
     @POST
     @Transactional
-    public Response createReservation(Reservation reservation) {
+    public Response createReservation(ReservationRequest reservationData) {
+        TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery("SELECT t FROM RestaurantTable t WHERE t.restaurant.id = :restaurantId")
+        .setParameter("restaurantId", reservationData.getRestaurantId());
+        RestaurantTable table = queryGetTable.getSingleResult();
+
+        TypedQuery<RestaurantUser> queryGetUser = entityManager.createQuery(SELECT u FROM RestaurantUser u WHERE u.username = :username)
+        .setParameter("username", reservationData.getUsername());
+        RestaurantUser user = queryGetUser.getSingleResult();
+
+        reservation = new Reservation(restaurantTable=table, restaurantUser=user, date=LocalDate.parse(reservationData.getDate()), time=LocalTime.parse(reservationData.getTime()));
         entityManager.persist(reservation);
         return Response.status(Response.Status.CREATED).entity(reservation).build();
     }

@@ -30,10 +30,11 @@ async function reserveTable() {
     const tableId = document.getElementById('tableNumber').value;
 
     const reservationData = {
-        restaurantTable: { id: tableId },
-        restaurantUser: { username: username },
-        date: date,
-        time: time
+        "tableId": tableId,
+        "username": username,
+        "date": date,
+        "time": time,
+        "restaurantId": restaurantId
     };
     console.log('Reservation data:', reservationData);
 
