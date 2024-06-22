@@ -11,7 +11,7 @@ public class RestaurantTable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-//    @Column(name = "chairs", nullable = false)
+   @Column(name = "chairs", nullable = false)
     private int chairs;
 
     @ManyToOne

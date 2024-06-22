@@ -28,6 +28,13 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(RestaurantTable restaurantTable, RestaurantUser restaurantUser, LocalDate date, LocalTime time) {
+        this.restaurantTable = restaurantTable;
+        this.restaurantUser = restaurantUser;
+        this.date = date;
+        this.time = time;
+    }
+
     public Long getId() {
         return id;
     }
