@@ -56,16 +56,33 @@ public class ReservationApi {
     @POST
     @Transactional
     public Response createReservation(ReservationRequest reservationData) {
-        TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery("SELECT t FROM RestaurantTable t WHERE t.restaurant.id = :restaurantId")
-        .setParameter("restaurantId", reservationData.getRestaurantId());
+//        TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery("SELECT t FROM restaurant_table t WHERE t.restaurant.id = :restaurantId ORDER BY t.id DESC", RestaurantTable.class);
+        TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery(
+                "SELECT t FROM restaurant_table t WHERE t.restaurant.id = :restaurantId " +
+                        "AND NOT EXISTS (SELECT r FROM Reservation r WHERE r.restaurantTable.id = t.id " +
+                        "AND r.date = :date AND r.time = :time) " +
+                        "ORDER BY t.id DESC",
+                RestaurantTable.class
+        );
+        queryGetTable.setParameter("restaurantId", reservationData.getRestaurantId());
+        queryGetTable.setParameter("date", reservationData.getDate());
+        queryGetTable.setParameter("time", reservationData.getTime());
+        queryGetTable.setMaxResults(1);
         RestaurantTable table = queryGetTable.getSingleResult();
-
-        TypedQuery<RestaurantUser> queryGetUser = entityManager.createQuery(SELECT u FROM RestaurantUser u WHERE u.username = :username)
-        .setParameter("username", reservationData.getUsername());
+        TypedQuery<RestaurantUser> queryGetUser = entityManager.createQuery("SELECT u FROM restaurant_user u WHERE u.username = :username", RestaurantUser.class);
+        queryGetUser.setParameter("username", reservationData.getUsername());
         RestaurantUser user = queryGetUser.getSingleResult();
+        Reservation reservation = new Reservation(table, user, reservationData.getDate(), reservationData.getTime());
 
-        reservation = new Reservation(restaurantTable=table, restaurantUser=user, date=LocalDate.parse(reservationData.getDate()), time=LocalTime.parse(reservationData.getTime()));
         entityManager.persist(reservation);
-        return Response.status(Response.Status.CREATED).entity(reservation).build();
+        System.out.println("dziala tutaj o !!!!");
+        ReservationDTO reservationDTO = new ReservationDTO(
+                reservation.getId(),
+                table.getId(),
+                user.getId(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
+        return Response.status(Response.Status.CREATED).entity(reservationDTO).build();
     }
 }

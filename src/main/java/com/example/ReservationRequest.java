@@ -13,7 +13,7 @@ public class ReservationRequest {
     public ReservationRequest() {
     }
 
-    public ReservationRequest(Long tableId, Long restaurantId;, String username, LocalDate date, LocalTime time) {
+    public ReservationRequest(Long tableId, Long restaurantId, String username, LocalDate date, LocalTime time) {
         this.tableId = tableId;
         this.restaurantId = restaurantId;
         this.username = username;
