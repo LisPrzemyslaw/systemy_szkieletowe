@@ -6,6 +6,12 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 ## Running the application in dev mode
 
+First, you need to set up the database. You can do this by running the following command in a directory src/main/docker:
+
+```shell script
+docker-compose up
+```
+
 You can run your application in dev mode that enables live coding using:
 
 ```shell script
