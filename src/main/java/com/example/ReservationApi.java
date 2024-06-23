@@ -56,7 +56,6 @@ public class ReservationApi {
     @POST
     @Transactional
     public Response createReservation(ReservationRequest reservationData) {
-//        TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery("SELECT t FROM restaurant_table t WHERE t.restaurant.id = :restaurantId ORDER BY t.id DESC", RestaurantTable.class);
         TypedQuery<RestaurantTable> queryGetTable = entityManager.createQuery(
                 "SELECT t FROM restaurant_table t WHERE t.restaurant.id = :restaurantId " +
                         "AND NOT EXISTS (SELECT r FROM Reservation r WHERE r.restaurantTable.id = t.id " +
@@ -75,7 +74,6 @@ public class ReservationApi {
         Reservation reservation = new Reservation(table, user, reservationData.getDate(), reservationData.getTime());
 
         entityManager.persist(reservation);
-        System.out.println("dziala tutaj o !!!!");
         ReservationDTO reservationDTO = new ReservationDTO(
                 reservation.getId(),
                 table.getId(),
