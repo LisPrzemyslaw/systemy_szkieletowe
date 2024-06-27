@@ -1,4 +1,4 @@
-# systemy_szkieletowe
+# table_reservations
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
